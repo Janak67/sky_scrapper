@@ -8,6 +8,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        // ChangeNotifierProvider.value(value: HomeProvider(),),
         ChangeNotifierProvider(
           create: (context) => HomeProvider(),
         ),
