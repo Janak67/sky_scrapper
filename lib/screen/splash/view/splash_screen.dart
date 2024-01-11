@@ -19,7 +19,16 @@ class _SplashScreenState extends State<SplashScreen> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Image.asset('assets/img/'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/img/logo.png',
+                height: 100,
+              ),
+              const Text('Weather & radar')
+            ],
+          ),
         ),
       ),
     );
