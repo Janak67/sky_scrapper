@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sky_scrapper/screen/home/provider/home_provider.dart';
+import 'package:sky_scrapper/utils/network.dart';
 import 'package:sky_scrapper/utils/share_helper.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,11 +14,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   HomeProvider? providerr;
   HomeProvider? providerw;
+  NetworkConnection networkConnection = NetworkConnection();
 
   @override
   void initState() {
     super.initState();
     context.read<HomeProvider>().getWeatherData();
+    networkConnection.checkConnection(context);
   }
 
   @override
@@ -29,163 +32,196 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Weather'),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.bookmark_outline),
+            ),
+          ],
         ),
         body: providerw!.homeModel == null
             ? const Center(child: CircularProgressIndicator())
-            : Stack(
-                children: [
-                  Image.asset(
-                    'assets/img/home1.jpg',
+            : providerw!.isOnline
+                ? Stack(
+                    children: [
+                      Image.asset(
+                        'assets/img/home1.jpg',
+                        height: MediaQuery.sizeOf(context).height,
+                        fit: BoxFit.cover,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: SearchBar(
+                                  hintText: 'Search...',
+                                  leading: const Icon(Icons.search_outlined),
+                                  trailing: const [
+                                    Icon(Icons.keyboard_voice_outlined),
+                                  ],
+                                  onSubmitted: (value) {
+                                    providerr!.citySearchData(value);
+                                    providerr!.getWeatherData();
+                                  },
+                                  elevation:
+                                      const MaterialStatePropertyAll(0.3),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context, 'detail',
+                                      arguments: providerw!.homeModel);
+                                },
+                                child: Text(
+                                  '${providerr!.homeModel!.name}',
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 25),
+                                ),
+                              ),
+                              const SizedBox(height: 60),
+                              Text(
+                                '${providerr!.homeModel!.cloudsModel!.all}°C',
+                                style: const TextStyle(
+                                    fontSize: 70, color: Colors.black),
+                              ),
+                              Text(
+                                '${providerr!.homeModel!.weatherList![0].main}',
+                                style: const TextStyle(
+                                    color: Colors.black54, fontSize: 25),
+                              ),
+                              const SizedBox(height: 60),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  gradient: const LinearGradient(
+                                    colors: [Colors.white24, Colors.black12],
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        buildExpanded(
+                                            'Wind Speed',
+                                            '${providerr!.homeModel!.windModel!.speed} km/h',
+                                            Icons.air_outlined),
+                                        buildExpanded(
+                                            'Temperature',
+                                            '${providerr!.homeModel!.mainModel!.temp}',
+                                            Icons.thermostat),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        buildExpanded(
+                                            'Feels Like',
+                                            '${providerr!.homeModel!.mainModel!.feels_like}',
+                                            Icons.thermostat_outlined),
+                                        buildExpanded(
+                                            'Humidity',
+                                            '${providerr!.homeModel!.mainModel!.humidity} %',
+                                            Icons.water_drop),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      children: [
+                                        buildExpanded(
+                                            'Pressure',
+                                            '${providerr!.homeModel!.mainModel!.pressure} hPa',
+                                            Icons.speed),
+                                        buildExpanded(
+                                            'Visibility',
+                                            '${providerr!.homeModel!.visibility}',
+                                            Icons.remove_red_eye),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  gradient: const LinearGradient(
+                                    colors: [Colors.white24, Colors.white24],
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        buildExpanded(
+                                            'MiniMum Temperature',
+                                            '${providerr!.homeModel!.mainModel!.temp_min}',
+                                            Icons.thermostat),
+                                        buildExpanded(
+                                            'MaxiMum Temperature',
+                                            '${providerr!.homeModel!.mainModel!.temp_max}',
+                                            Icons.thermostat),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        buildExpanded(
+                                            'Sunrise',
+                                            '${providerr!.homeModel!.sysModel!.sunrise}',
+                                            Icons.sunny),
+                                        buildExpanded(
+                                            'Sunset',
+                                            '${providerr!.homeModel!.sysModel!.sunset}',
+                                            Icons.wb_sunny_sharp),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Center(
+                    child: Image.asset(
+                    'assets/img/network.jpg',
                     height: MediaQuery.sizeOf(context).height,
                     fit: BoxFit.cover,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            '${providerr!.homeModel!.name}',
-                            style: const TextStyle(
-                                color: Colors.black, fontSize: 20),
-                          ),
-                          const SizedBox(height: 100),
-                          Text(
-                            '${providerr!.homeModel!.cloudsModel!.all}°C',
-                            style: const TextStyle(
-                                fontSize: 70, color: Colors.black),
-                          ),
-                          const SizedBox(height: 100),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              gradient: const LinearGradient(
-                                colors: [Colors.white24, Colors.black12],
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.44,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(Icons.air),
-                                          const Text(
-                                            'Wind Speed',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            '${providerr!.homeModel!.windModel!.speed} km/h',
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.44,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(Icons.speed),
-                                          const Text(
-                                            'Pressure',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            '${providerr!.homeModel!.mainModel!.pressure} hPa',
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.44,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          // const Icon(Icons.wind_power),
-                                          // const Icon(Icons.water_drop),
-                                          const Icon(Icons.remove_red_eye),
-                                          // const Icon(Icons.speed),
-                                          const Text(
-                                            'Visibility',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            '${providerr!.homeModel!.visibility}',
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-        drawer: Drawer(
+                  )),
+        drawer: const Drawer(
           child: Column(
-            children: [
-              const SizedBox(height: 80),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    const Icon(Icons.light_mode_outlined),
-                    const SizedBox(width: 8),
-                    const Text('Theme'),
-                    const Spacer(),
-                    Consumer<HomeProvider>(
-                      builder: (context, value1, child) => Switch(
-                        value: value1.isLight,
-                        onChanged: (value) {
-                          ShareHelper shr = ShareHelper();
-                          shr.setTheme(value);
-                          value1.changeTheme();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            children: [],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildExpanded(String name, String detail, dynamic icon) {
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width * 0.44,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon),
+          Text(
+            name,
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            detail,
+            style: const TextStyle(color: Colors.black, fontSize: 15),
+          ),
+        ],
       ),
     );
   }

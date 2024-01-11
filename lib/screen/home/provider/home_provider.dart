@@ -6,11 +6,18 @@ import 'package:sky_scrapper/utils/share_helper.dart';
 class HomeProvider with ChangeNotifier {
   HomeModel? homeModel;
   bool isLight = true;
+  String citySearch = 'surat';
+  bool isOnline = false;
 
   Future<void> getWeatherData() async {
     APIHelper apiHelper = APIHelper();
-    HomeModel? h1 = await apiHelper.weatherApiCall();
+    HomeModel? h1 = await apiHelper.weatherApiCall(citySearch);
     homeModel = h1;
+    notifyListeners();
+  }
+
+  void citySearchData(String search) {
+    citySearch = search;
     notifyListeners();
   }
 
@@ -18,6 +25,11 @@ class HomeProvider with ChangeNotifier {
     ShareHelper shr = ShareHelper();
     bool? isTheme = await shr.getTheme();
     isLight = isTheme ?? false;
+    notifyListeners();
+  }
+
+  void changeStatus(bool status) {
+    isOnline = status;
     notifyListeners();
   }
 }

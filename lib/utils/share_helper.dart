@@ -11,4 +11,14 @@ class ShareHelper {
     bool? isTheme = shr.getBool('theme');
     return isTheme;
   }
+
+  Future<void> addCity(List<String> cityList) async {
+    SharedPreferences shr = await SharedPreferences.getInstance();
+    shr.setStringList("bookmark", cityList);
+  }
+
+  Future<List<String>?> getCityData() async {
+    SharedPreferences shr = await SharedPreferences.getInstance();
+    return shr.getStringList("bookmark");
+  }
 }

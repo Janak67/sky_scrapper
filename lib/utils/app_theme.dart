@@ -9,11 +9,7 @@ ThemeData lightTheme = ThemeData(
     titleTextStyle: TextStyle(color: Colors.black, fontSize: 25),
   ),
   brightness: Brightness.light,
-  textTheme: const TextTheme(
-    titleLarge: TextStyle(),
-    titleMedium: TextStyle(),
-    titleSmall: TextStyle(),
-  ),
+  iconTheme: const IconThemeData(color: Colors.black),
 );
 
 ThemeData darkTheme = ThemeData(
@@ -25,9 +21,5 @@ ThemeData darkTheme = ThemeData(
     titleTextStyle: TextStyle(color: Colors.white, fontSize: 25),
   ),
   brightness: Brightness.dark,
-  textTheme: const TextTheme(
-    titleLarge: TextStyle(),
-    titleMedium: TextStyle(),
-    titleSmall: TextStyle(),
-  ),
+  iconTheme: const IconThemeData(color: Colors.white),
 );
