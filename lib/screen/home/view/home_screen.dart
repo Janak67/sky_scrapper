@@ -35,13 +35,20 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             IconButton(
               onPressed: () async {
-                context.read<HomeProvider>().bookMarkCity!;
+                context
+                    .read<HomeProvider>()
+                    .bookMarkCity!
+                    .add(providerw!.citySearch);
                 ShareHelper shareHelper = ShareHelper();
                 await shareHelper
                     .setCity(context.read<HomeProvider>().bookMarkCity!);
                 context.read<HomeProvider>().getBookMark();
               },
-              icon: const Icon(Icons.bookmark_outline),
+              icon: Icon(
+                  providerw!.bookMarkCity!.contains(providerr!.citySearch) ==
+                          true
+                      ? Icons.bookmark
+                      : Icons.bookmark_outline),
             ),
           ],
         ),
