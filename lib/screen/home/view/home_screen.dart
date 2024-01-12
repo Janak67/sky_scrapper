@@ -34,7 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const Text('Weather'),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                context.read<HomeProvider>().bookMarkCity!;
+                ShareHelper shareHelper = ShareHelper();
+                await shareHelper
+                    .setCity(context.read<HomeProvider>().bookMarkCity!);
+                context.read<HomeProvider>().getBookMark();
+              },
               icon: const Icon(Icons.bookmark_outline),
             ),
           ],
@@ -47,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Image.asset(
                         'assets/img/home1.jpg',
                         height: MediaQuery.sizeOf(context).height,
+                        width: MediaQuery.sizeOf(context).width,
                         fit: BoxFit.cover,
                       ),
                       Padding(
@@ -191,13 +198,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 : Center(
                     child: Image.asset(
-                    'assets/img/network.jpg',
-                    height: MediaQuery.sizeOf(context).height,
-                    fit: BoxFit.cover,
-                  )),
-        drawer: const Drawer(
-          child: Column(
-            children: [],
+                      'assets/img/network.jpg',
+                      height: MediaQuery.sizeOf(context).height,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+        drawer: Drawer(
+          child: ListView.builder(
+            itemCount: context.watch<HomeProvider>().bookMarkCity!.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                  context.watch<HomeProvider>().bookMarkCity![index],
+                  style: const TextStyle(fontSize: 25),
+                ),
+              );
+            },
           ),
         ),
       ),

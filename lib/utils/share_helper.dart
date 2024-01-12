@@ -12,7 +12,7 @@ class ShareHelper {
     return isTheme;
   }
 
-  Future<void> addCity(List<String> cityList) async {
+  Future<void> setCity(List<String> cityList) async {
     SharedPreferences shr = await SharedPreferences.getInstance();
     shr.setStringList("bookmark", cityList);
   }

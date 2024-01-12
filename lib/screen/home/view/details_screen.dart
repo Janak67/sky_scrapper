@@ -80,10 +80,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 fontSize: 23, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
-                          buildRowTile('City: ${h1.name}', Icons.location_on),
+                          buildRowTile('City :- ${h1.name}', Icons.location_on),
                           const SizedBox(height: 10),
                           buildRowTile(
-                              'Country: ${h1.sysModel!.country}', Icons.cabin),
+                              'Country :- ${h1.sysModel!.country}', Icons.cabin),
                           const Divider(thickness: 1),
                           const Text(
                             'Location',
@@ -91,9 +91,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 fontSize: 23, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
-                          buildRowTile('lat: ${h1.coordModel!.lat}', Icons.map),
+                          buildRowTile('lat :- ${h1.coordModel!.lat}', Icons.map),
                           const SizedBox(height: 10),
-                          buildRowTile('lon: ${h1.coordModel!.lon}', Icons.map),
+                          buildRowTile('lon :- ${h1.coordModel!.lon}', Icons.map),
                           const SizedBox(height: 80),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,

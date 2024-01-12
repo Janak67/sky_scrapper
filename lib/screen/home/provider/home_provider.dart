@@ -8,6 +8,7 @@ class HomeProvider with ChangeNotifier {
   bool isLight = true;
   String citySearch = 'surat';
   bool isOnline = false;
+  List<String>? bookMarkCity = [];
 
   Future<void> getWeatherData() async {
     APIHelper apiHelper = APIHelper();
@@ -30,6 +31,12 @@ class HomeProvider with ChangeNotifier {
 
   void changeStatus(bool status) {
     isOnline = status;
+    notifyListeners();
+  }
+
+  void getBookMark() async {
+    ShareHelper shareHelper = ShareHelper();
+    bookMarkCity = await shareHelper.getCityData();
     notifyListeners();
   }
 }
