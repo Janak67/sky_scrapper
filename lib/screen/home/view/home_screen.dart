@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     context.read<HomeProvider>().getWeatherData();
     networkConnection.checkConnection(context);
+    context.read<HomeProvider>().getBookMark();
   }
 
   @override
