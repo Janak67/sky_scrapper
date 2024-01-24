@@ -22,6 +22,7 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  //Theme
   void changeTheme() async {
     ShareHelper shr = ShareHelper();
     bool? isTheme = await shr.getTheme();
@@ -34,9 +35,27 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  //BookMark
   void getBookMark() async {
     ShareHelper shareHelper = ShareHelper();
-    bookMarkCity = await shareHelper.getCityData();
+    List<String>? book = await shareHelper.getCityData();
+    if (book != null) {
+      bookMarkCity = book;
+    }
+    notifyListeners();
+  }
+
+  void addBookMark() {
+    ShareHelper shareHelper = ShareHelper();
+    bookMarkCity!.add(citySearch);
+    shareHelper.setCity(bookMarkCity!);
+    notifyListeners();
+  }
+
+  void deleteBookMark() {
+    ShareHelper shareHelper = ShareHelper();
+    bookMarkCity!.remove(citySearch);
+    shareHelper.setCity(bookMarkCity!);
     notifyListeners();
   }
 }

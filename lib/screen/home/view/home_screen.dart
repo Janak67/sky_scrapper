@@ -34,16 +34,20 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const Text('Weather'),
           actions: [
             IconButton(
-              onPressed: () async {
-                context
-                    .read<HomeProvider>()
-                    .bookMarkCity!
-                    .add(providerw!.citySearch);
-                ShareHelper shareHelper = ShareHelper();
-                await shareHelper
-                    .setCity(context.read<HomeProvider>().bookMarkCity!);
-                context.read<HomeProvider>().getBookMark();
+              onPressed: () {
+                providerr!.getBookMark();
+                if (!providerr!.bookMarkCity!.contains(providerr!.citySearch)) {
+                  providerr!.addBookMark();
+                } else {
+                  providerr!.deleteBookMark();
+                }
               },
+              // onPressed: () async {
+              //   providerr!.bookMarkCity!.add(providerw!.citySearch);
+              //   ShareHelper shareHelper = ShareHelper();
+              //   await shareHelper.setCity(providerr!.bookMarkCity!);
+              //   providerr!.getBookMark();
+              // },
               icon: Icon(
                   providerw!.bookMarkCity!.contains(providerr!.citySearch) ==
                           true
@@ -212,11 +216,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
         drawer: Drawer(
           child: ListView.builder(
-            itemCount: context.watch<HomeProvider>().bookMarkCity!.length,
+            itemCount: providerw!.bookMarkCity!.length,
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(
-                  context.watch<HomeProvider>().bookMarkCity![index],
+                  providerw!.bookMarkCity![index],
                   style: const TextStyle(fontSize: 25),
                 ),
               );
