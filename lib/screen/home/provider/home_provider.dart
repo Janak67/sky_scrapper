@@ -30,6 +30,13 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleTheme() async {
+    isLight = !isLight;
+    ShareHelper shr = ShareHelper();
+    await shr.setTheme(isLight);
+    notifyListeners();
+  }
+
   void changeStatus(bool status) {
     isOnline = status;
     notifyListeners();
